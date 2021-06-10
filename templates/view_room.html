@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<title>[Team SH]채팅방</title>
+	<link href="style.css" rel="stylesheet" type="text/css">
+	<style>
+		.nav {
+			height: 70px;
+			border-bottom: 5px solid black;
+			display: flex;
+			align-items: center;
+		}
+
+		.nav-right-items {
+			display: flex;
+			margin-left: auto;
+		}
+
+		.nav-item {
+			margin-left: 10px;
+		}
+
+		.title {
+			text-align: center;
+			font-size: 3.0rem;
+			font-weight: bold;
+		}
+
+		.subtitle {
+			font-size: 18px;
+			text-align: center;
+			font-weight: 300;
+			margin-top: 10px;
+		}
+
+		.main {
+			width: 1000px;
+			margin: 0 auto;
+			margin-top: 60px;
+		}
+
+		.prices {
+			display: flex;
+		}
+
+		.price-item {
+			width: 300px;
+			height: 300px;
+			border: 1px solid black;
+			border-radius: 4px;
+			margin: 20px;
+			text-align: center;
+		}
+
+		.price-item-title {
+			font-size: 1.5rem;
+			background: rgba(0, 0, 0, .03);
+			height: 53px;
+			line-height: 53px;
+			border-bottom: 1px solid black;
+		}
+
+		.price-item-price {
+			font-size: 2.5rem;
+			font-weight: bold;
+			padding: 20px;
+		}
+
+		.price-item-detail {
+			font-size: 13px;
+			text-align: center;
+		}
+
+		.price-item-end {
+			border-bottom: 1px solid black;
+		}
+
+		.price-item-button {
+			color: #007bff;
+			background-color: transparent;
+			background-image: none;
+			border-color: #007bff;
+			padding: .375rem .75rem;
+			font-size: 1rem;
+			line-height: 1.5;
+			border-radius: .25rem;
+			text-align: bottom;
+
+		}
+
+		.message-handler {
+
+			border: 1px solid black;
+			border-radius: 3px;
+			margin: 20px;
+    }
+    .Team-name{
+      font-size: 20px;
+			font-weight: bold;
+    }
+	</style>
+</head>
+
+<body>
+  <div class="nav">
+     <div class="Team-name">
+       {{ room.name }} 채팅방
+     </div>
+
+    <div class="nav-right-items">
+        <button type="button" class="nav-item" onclick="location.href='http://210.182.7.8:5000/signup'">회원가입</button>
+        <button type="button" class="nav-item" onclick="location.href='http://210.182.7.8:5000/login'">로그인</button>
+        <button type="button" class="nav-item" onclick="location.href='http://210.182.7.8:5000/create-room'">채팅방 개설</button>
+        <button type="button" class="nav-item" onclick="location.href=window.location.href+'/edit'">채팅방 설정</button>
+
+    </div>
+  </div>
+
+  <div style="background: rgba(0, 0, 0, .06); overflow:auto; width:600px; height:300px; text-align: left;" class="message-handler">
+    <div id="messages">
+		{% for message in messages %}
+		<div><b>[{{ message.created_at }}]&nbsp;{{ message.sender }}:&nbsp;&nbsp;</b> {{ message.text }}
+    </div>
+        {% endfor %}
+  </div>
+  </div>
+
+  <form id="message_input_form">
+    <button> > </button>
+      <input style="width: 600px; height:30px; border: 1px solid black; border-radius: 4px;" type="text" id="message_input" placeholder="메시지를 입력하세요...">
+      <button type="submit">전송</button>
+  </form>
+
+  <div style="margin-left: 50px;margin: 0 auto; margin-top: 60px;">채팅방 멤버</div>
+    <ul>
+        {% for member in room_members %}
+            <li>{{ member._id.username }}</li>
+        {% endfor %}
+    </ul>
+
+    <footer>
+        <p><center><br><br>chlghgusqud1@naver.com <br> jush0209@naver.com</center></p>
+    </footer>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+<script>
+    const socket = io.connect("http://210.182.7.8:5000");
+                                    <!--210.182.7.8 112.186.255.14-->
+    socket.on('connect', function () {
+        socket.emit('join_room', {
+            username: "{{ username }}",
+            room: "{{ room_id }}"
+        });
+
+        let message_input = document.getElementById('message_input');
+
+        document.getElementById('message_input_form').onsubmit = function (e) {
+            e.preventDefault();
+            let message = message_input.value.trim();
+            if (message.length) {
+                socket.emit('send_message', {
+                    username: "{{ username }}",
+                    room: "{{ room_id }}",
+                    message: message
+                })
+            }
+            message_input.value = '';
+            message_input.focus();
+        }
+    });
+
+
+    function prepend_message(message, username, created_at) {
+        const newNode = document.createElement('div');
+        newNode.innerHTML = `<b>[${created_at}]&nbsp;${username}:&nbsp;</b> ${message}`;
+        const messages_div = document.getElementById('messages');
+        messages_div.insertBefore(newNode, messages_div.firstChild);
+    }
+
+
+    window.onbeforeunload = function () {
+        socket.emit('leave_room', {
+            username: "{{ username }}",
+            room: "{{ room._id }}"
+        })
+    };
+
+    socket.on('receive_message', function(data){
+        console.log(data);
+        const newNode = document.createElement('div');
+        newNode.innerHTML = `<b>[${data.created_at}]&nbsp;${data.username}:&nbsp;</b> ${data.message}`;
+        document.getElementById('messages').appendChild(newNode);
+    });
+
+    socket.on('join_room_announcement', function(data){
+        console.log(data);
+        if (data.username !== "{{ username }}") {
+            const newNode = document.createElement('div');
+            newNode.innerHTML = `<b>${data.username}</b> 님이 입장하였습니다.`;
+            document.getElementById('messages').appendChild(newNode);
+        }
+    });
+     socket.on('leave_room_announcement', function (data) {
+        console.log(data);
+        const newNode = document.createElement('div');
+        newNode.innerHTML = `<b>${data.username}</b> 님이 채팅방을 나갔습니다.`;
+        document.getElementById('messages').appendChild(newNode);
+    });
+</script>
+</html>

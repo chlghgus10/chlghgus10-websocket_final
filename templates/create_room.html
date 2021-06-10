@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>[Team SH] 3조 Chat Program</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <style>
+
+      .nav {
+        height: 70px;
+        border-bottom: 5px solid black;
+        display: flex;
+        align-items: center;
+      }
+      .nav-right-items{
+        display: flex;
+        margin-left: auto;
+      }
+      .nav-item{
+        margin-left: 10px;
+      }
+      .title{
+        font-size: 18px;
+        text-align: center;
+        font-weight: bold;
+      }
+      .subtitle{
+        font-size: 18px;
+        text-align: center;
+        font-weight: 300;
+        margin-top: 10px;
+      }
+      .main{
+        width: 1000px;
+        margin: 0 auto;
+        margin-top: 60px;
+      }
+      .prices{
+        display: flex;
+      }
+      .price-item{
+        width: 300px;
+        height:300px;
+        border: 1px solid black;
+        border-radius: 4px;
+        margin: 20px;
+        text-align: center;
+      }
+      .price-item-title{
+        font-size: 1.5rem;
+        background: rgba(0,0,0,.03);
+        height: 53px;
+        line-height: 53px;
+        border-bottom: 1px solid black;
+      }
+      .price-item-price{
+        font-size: 2.5rem;
+        font-weight: bold;
+        padding: 20px;
+      }
+      .price-item-detail{
+        font-size: 13px;
+        text-align: center;
+      }
+      .price-item-end{
+        border-bottom: 1px solid black;
+      }
+
+      .price-item-button{
+        color: #007bff;
+        background-color: transparent;
+        background-image: none;
+        border-color: #007bff;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: .25rem;
+        text-align: bottom;
+
+      }
+      .login-page{
+        margin: 50px;
+
+        text-align: center;
+        font-weight: 300;
+      }
+    </style>
+</head>
+
+<body>
+  <div class="nav">
+     <div class="Team-name">
+       [3조 Team SH]
+     </div>
+    <div class="nav-right-items">
+      <button type="button" class="nav-item" onclick="location.href='http://210.182.7.8:5000/signup'">회원가입</button>
+      <button type="button" class="nav-item" onclick="location.href='http://210.182.7.8:5000/login'">로그인</button>
+      <button type="button" class="nav-item" onclick="location.href='http://210.182.7.8:5000/create-room'">채팅방 개설</button>
+    </div>
+
+  </div>
+  <div class="login-page">
+        <h1>채팅방 생성</h1>
+        <h3>{{ message }}</h3>
+        <form method="post">
+            <label>채팅방 이름:</label>
+            <input type="text" name="room_name">
+            <br>
+            <label>초대할 멤버:</label>
+            <input type="text" name="members">
+            <br>
+            <button type="submit">제출</button>
+        </form>
+  </div>
+<footer>
+    <p><center><br><br>chlghgusqud1@naver.com <br> jush0209@naver.com</center></p>
+</footer>
+</body>
+</html>

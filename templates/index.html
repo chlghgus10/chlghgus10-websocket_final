@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>[Team SH] 3조 Chat Program</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <style>
+
+      .nav {
+        height: 70px;
+        border-bottom: 5px solid black;
+        display: flex;
+        align-items: center;
+      }
+      .nav-right-items{
+        display: flex;
+        margin-left: auto;
+      }
+      .nav-item{
+        margin-left: 10px;
+      }
+      .title{
+        text-align: center;
+        font-size: 3.0rem;
+        font-weight: bold;
+      }
+      .subtitle{
+        font-size: 18px;
+        text-align: center;
+        font-weight: 300;
+        margin-top: 10px;
+      }
+      .main{
+        width: 1000px;
+        margin: 0 auto;
+        margin-top: 60px;
+      }
+      .prices{
+        display: flex;
+      }
+      .price-item{
+        width: 300px;
+        height:300px;
+        border: 1px solid black;
+        border-radius: 4px;
+        margin: 20px;
+        text-align: center;
+      }
+      .price-item-title{
+        font-size: 1.5rem;
+        background: rgba(0,0,0,.03);
+        height: 53px;
+        line-height: 53px;
+        border-bottom: 1px solid black;
+      }
+      .price-item-price{
+        font-size: 2.5rem;
+        font-weight: bold;
+        padding: 20px;
+      }
+      .price-item-detail{
+        font-size: 13px;
+        text-align: center;
+      }
+      .price-item-end{
+        border-bottom: 1px solid black;
+      }
+
+      .price-item-button{
+        color: #007bff;
+        background-color: transparent;
+        background-image: none;
+        border-color: #007bff;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: .25rem;
+        text-align: bottom;
+
+      }
+      .chat session{
+
+      }
+    </style>
+</head>
+
+<body>
+  <div class="nav">
+     <div class="Team-name">
+       [3조 Team SH]
+     </div>
+    <div class="nav-right-items">
+      <button type="button" class="nav-item" onclick="location.href='http://210.182.7.8:5000/signup'">회원가입</button>
+        {% if current_user.is_authenticated %}
+        <button type="button" class="nav-item" onclick="location.href='http://210.182.7.8:5000/logout'">로그아웃</button>
+        <button type="button" class="nav-item" onclick="location.href='http://210.182.7.8:5000/create-room'">채팅방 개설</button>
+        {% else %}
+        <button type="button" class="nav-item" onclick="location.href='http://210.182.7.8:5000/login'">로그인</button>
+        {% endif %}
+    </div>
+
+  </div>
+  <div class="main">
+    <div class="title">
+      채팅방에 오신것을 환영합니다!
+    </div>
+    <div class="subtitle">
+      안녕하세요! {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}게스트{% endif %} 님!
+    </div>
+    <div class="subtitle">
+      소켓프로그래밍 3조 이승호 주성현입니다!
+    </div>
+    <div class="subtitle">
+      ※GUEST 이신 경우 회원가입 및 로그인을 하셔야 입장 가능합니다!
+    </div>
+
+    <div class="prices">
+      <div class="price-item">
+       <div class="price-item-title">
+        Sign up
+        </div>
+        <div class="price-item-price">
+          <button type="button" class="price-item-button" onclick="location.href='http://210.182.7.8:5000/signup'">회원가입
+          </button>
+        </div>
+        <div class="price-item-detail">
+          처음 방문하신경우
+        </div>
+        <div class="price-item-detail">
+          회원가입을 먼저
+        </div>
+        <div class="price-item-detail">
+          진행해주세요!
+        </div>
+
+      </div>
+
+              <div class="price-item">
+            <div class="price-item-title">
+                {% if current_user.is_authenticated %}Logout{% else %}Login{% endif %}
+            </div>
+            <div class="price-item-price">
+                {% if current_user.is_authenticated %}
+
+            <button type="button"class="price-item-button"onclick="location.href='http://210.182.7.8:5000/logout/'">
+                로그아웃
+              </button>
+            </div>
+            <div class="price-item-detail">
+              로그아웃하기
+            </div>
+            {% else %}
+             <button type="button"class="price-item-button"onclick="location.href='http://210.182.7.8:5000/login'">
+                로그인
+              </button>
+            </div>
+            <div class="price-item-detail">
+              회원가입 후
+            </div>
+            <div class="price-item-detail">
+              로그인을
+            </div>
+            <div class="price-item-detail">
+              진행할수있습니다!
+            </div>
+            {% endif %}
+          </div>
+
+
+      <div class="price-item">
+       <div class="price-item-title">
+        대화방 세션
+        </div>
+        <div class="chat session">
+          {% if current_user.is_authenticated %}
+                  <ul>
+                      {% for room in rooms %}
+                          <li><a href="/rooms/{{ room._id.room_id }}">{{ room.room_name }}</a></li>
+                      {% endfor %}
+                  </ul>
+              {% endif %}
+        </div>
+        <div class="price-item-detail">
+        참여가능한 채팅방 세션입니다.
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+    <footer>
+        <p></p>
+        <p><center><br><br>이승호 chlghgusqud1@naver.com <br>주성현 jush0209@naver.com</center></p>
+    </footer>
+
+</body>
+
+</html>
